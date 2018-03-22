@@ -25,7 +25,15 @@ public class Hacker :MonoBehaviour {
 		} else if (currentScreen == Screen.MainMenu) {
 			RunMainMenu(input);
 		} else if (currentScreen == Screen.Password) {
-
+            if (level == 1 && input == "foobar") {
+                Terminal.WriteLine("Congratulations, you're in!");
+            } else if (level == 2 && input == "bizbaz") {
+                Terminal.WriteLine("Congratulations, you're in!");
+            } else if (level == 3 && input == "fizbar") {
+                Terminal.WriteLine("Congratulations, you're in!");
+            } else {
+                Terminal.WriteLine("access denied");
+            }
 		} else if (currentScreen == Screen.Win) {
 
 		}
