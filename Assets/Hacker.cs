@@ -5,7 +5,8 @@ public class Hacker :MonoBehaviour {
     // Game configuration data
     string[] level1Passwords = { "books", "teacher", "science", "grades", "football", "dance" };
     string[] level2Passwords = { "handcuffs", "deputy", "detective", "criminal", "handgun", "arrested" };
-    string[] level3Passwords = { "judicial", "executive", "secratary", "homeland", "collusion", "representatives" };
+    string[] level3Passwords = { "judicial", "executive", "secretary", "homeland", "collusion", "representatives" };
+    const string menuHint = "Type \"menu\" to return to main menu.";
 
 	// Game state
 	int level;
@@ -24,8 +25,11 @@ public class Hacker :MonoBehaviour {
 	}
 
 	void OnUserInput(string input) {
-		if (input == "menu") {
-			ShowMainMenu();
+        if (input == "menu") {
+            ShowMainMenu();
+        } else if (input == "quit" || input == "close" || input == "exit") {
+            Terminal.WriteLine("If on the web, close the tab.");
+            Application.Quit();
 		} else if (currentScreen == Screen.MainMenu) {
 			RunMainMenu(input);
 		} else if (currentScreen == Screen.Password) {
@@ -57,7 +61,8 @@ public class Hacker :MonoBehaviour {
 			Terminal.WriteLine("Please choose a level, Mr. Bond.");
 		} else {
 			Terminal.WriteLine("Please choose a valid level.");
-		}
+            Terminal.WriteLine(menuHint);
+        }
 	}
 
 	void StartGame() {
@@ -101,6 +106,7 @@ public class Hacker :MonoBehaviour {
         currentScreen = Screen.Win;
         Terminal.ClearScreen();
         ShowLevelReward();
+        Terminal.WriteLine(menuHint);
     }
 
     void ShowLevelReward() {
@@ -114,7 +120,6 @@ public class Hacker :MonoBehaviour {
  /______//
 (______(/
 ");
-                Terminal.WriteLine("Type \"menu\" to return to main menu.");
                 break;
             case 2:
                 Terminal.WriteLine("Here's a get out of jail free card.\nHave fun!");
@@ -123,7 +128,6 @@ public class Hacker :MonoBehaviour {
   >`(==(----'
  (__/~~`            
 ");
-                Terminal.WriteLine("Type \"menu\" to return to main menu.");
                 break;
             case 3:
                 Terminal.WriteLine("The country is now yours. Things could be worse.");
@@ -134,7 +138,6 @@ public class Hacker :MonoBehaviour {
   |
   |
 ");
-                Terminal.WriteLine("Type \"menu\" to return to main menu.");
                 break;
             default:
                 Debug.LogError("invalid level error.");
