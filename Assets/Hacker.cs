@@ -1,13 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Hacker :MonoBehaviour {
+
+    // Game configuration data
+    string[] level1Passwords = { "books", "teacher", "science", "grades", "football", "dance" };
+    string[] level2Passwords = { "handcuffs", "deputy", "detective", "criminal", "handgun", "arrested" };
+    string[] level3Passwords = { "judicial", "executive", "secratary", "homeland", "collusion", "representatives" };
 
 	// Game state
 	int level;
 	enum Screen { MainMenu, Password, Win };
 	Screen currentScreen;
+    string password;
 
 	// Use this for initialization
 	void Start () {
@@ -25,21 +29,13 @@ public class Hacker :MonoBehaviour {
 		} else if (currentScreen == Screen.MainMenu) {
 			RunMainMenu(input);
 		} else if (currentScreen == Screen.Password) {
-            if (level == 1 && input == "foobar") {
-                Terminal.WriteLine("Congratulations, you're in!");
-            } else if (level == 2 && input == "bizbaz") {
-                Terminal.WriteLine("Congratulations, you're in!");
-            } else if (level == 3 && input == "fizbar") {
-                Terminal.WriteLine("Congratulations, you're in!");
-            } else {
-                Terminal.WriteLine("access denied");
-            }
-		} else if (currentScreen == Screen.Win) {
+            CheckPassword(input);
+        } else if (currentScreen == Screen.Win) {
 
 		}
 	}
 
-	void ShowMainMenu() {
+    void ShowMainMenu() {
 		currentScreen = Screen.MainMenu;
 
 		Terminal.ClearScreen();
@@ -52,16 +48,12 @@ public class Hacker :MonoBehaviour {
 	}
 
 	void RunMainMenu(string input) {
-		if (input == "1") {
-			level = 1;
-			StartGame();
-		} else if (input == "2") {
-			level = 2;
-			StartGame();
-		} else if (input == "3") {
-			level = 3;
-			StartGame();
-		} else if (input == "007") {
+        bool isValidLevelNumber = (input == "1" || input == "2" || input == "3");
+
+        if (isValidLevelNumber) {
+            level = int.Parse(input);
+            StartGame();
+        } else if (input == "007") {
 			Terminal.WriteLine("Please choose a level, Mr. Bond.");
 		} else {
 			Terminal.WriteLine("Please choose a valid level.");
@@ -69,8 +61,84 @@ public class Hacker :MonoBehaviour {
 	}
 
 	void StartGame() {
-		currentScreen = Screen.Password;
-		Terminal.WriteLine("You have chosen level " + level);
-		Terminal.WriteLine("Please enter your password: ");
-	}
+        currentScreen = Screen.Password;
+        Terminal.ClearScreen();
+        SetRandomPassword();
+        Terminal.WriteLine("Enter your password, hint: " + password.Anagram());
+    }
+
+    void SetRandomPassword() {
+        int index;
+
+        switch (level) {
+            case 1:
+                index = Random.Range(0, level1Passwords.Length);
+                password = level1Passwords[index];
+                break;
+            case 2:
+                index = Random.Range(0, level2Passwords.Length);
+                password = level2Passwords[index];
+                break;
+            case 3:
+                index = Random.Range(0, level3Passwords.Length);
+                password = level3Passwords[index];
+                break;
+            default:
+                Debug.LogError("Invalid level number");
+                break;
+        }
+    }
+
+    void CheckPassword(string input) {
+        if (input == password) {
+            DisplayWinScreen();
+        } else {
+            StartGame();
+        }
+    }
+
+    void DisplayWinScreen() {
+        currentScreen = Screen.Win;
+        Terminal.ClearScreen();
+        ShowLevelReward();
+    }
+
+    void ShowLevelReward() {
+        switch(level) {
+            case 1:
+                Terminal.WriteLine("Here's a book. Try a harder difficulty for a better reward.");
+                Terminal.WriteLine(@"
+    _______
+   /      /,
+  /      //
+ /______//
+(______(/
+");
+                Terminal.WriteLine("Type \"menu\" to return to main menu.");
+                break;
+            case 2:
+                Terminal.WriteLine("Here's a get out of jail free card.\nHave fun!");
+                Terminal.WriteLine(@"
+  _ ________,
+  >`(==(----'
+ (__/~~`            
+");
+                Terminal.WriteLine("Type \"menu\" to return to main menu.");
+                break;
+            case 3:
+                Terminal.WriteLine("The country is now yours. Things could be worse.");
+                Terminal.WriteLine(@"
+  o____
+  |\\//|
+  |//\\|
+  |
+  |
+");
+                Terminal.WriteLine("Type \"menu\" to return to main menu.");
+                break;
+            default:
+                Debug.LogError("invalid level error.");
+                break;
+        }
+    }
 }
